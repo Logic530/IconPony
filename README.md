@@ -1,2 +1,2 @@
 # IconPony
-Icon converter tool for Ponytown
+Icon converter for Ponytown ———— Use Ponytown character as avartar
