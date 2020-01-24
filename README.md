@@ -1,2 +1,20 @@
 # IconPony
-Icon converter for Ponytown ———— Use Ponytown character as avartar
+
+([EN](READEME_EN.md)|中文)
+
+一个[PonyTown](https://pony.town/)头像制作器，名字还没想好，先草草起一个
+
+基于Python，需要pillow库
+
+## V0.1
+
+V0.1版本实现了以下基础功能：
+
++ 使用系统对话框导入图片
++ 使用系统对话框导出图片
++ 可选择导出图片的背景颜色和图片大小，颜色使用系统对话框选择，目前支持的大小有 64 256 512px
++ 未知bug
+
+注释：
+
+程序很简单，主要是自己写来自用和练练手。
