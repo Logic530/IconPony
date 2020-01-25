@@ -4,14 +4,13 @@ A simple python gui tool for making avartar outof ponytown exported image
 
 This program needs pillow library
 
-Version: 0.1
+Version: 0.2
 Author: Logic_530
 Date: 2020-1-24
 """
 
 import tkinter as tk
-from tkinter import filedialog
-from tkinter import colorchooser
+from tkinter import filedialog, colorchooser
 from PIL import Image, ImageDraw, ImageTk
 
 
@@ -48,7 +47,8 @@ class app(tk.Frame):
 
         # 预览图片
         self.previewer = tk.Label(self.preview_frame)
-        self.previewer['image'] = ImageTk.PhotoImage(image=Image.new('RGBA', (128, 128)))
+        self.previewer['image'] = ImageTk.PhotoImage(
+            image=Image.new('RGBA', (128, 128)))
         self.previewer.pack()
 
         # 导入按钮
@@ -100,13 +100,11 @@ class app(tk.Frame):
         self.size_button_64['state'] = 'disable'
         self.size_button_256['state'] = 'disable'
         self.size_button_512['state'] = 'disable'
+        self.export_button['state'] = 'disable'
 
     def import_image(self):
         self.image_path = filedialog.askopenfilename(
             filetypes=[('pony image', '*.png')])
-        #
-        print(type(self.image_path))
-        #
         if self.image_path:
             print('import image:', self.image_path)
             self.image = self.pony_image(self.image_path)
@@ -116,8 +114,9 @@ class app(tk.Frame):
             self.size_button_64['state'] = 'normal'
             self.size_button_256['state'] = 'normal'
             self.size_button_512['state'] = 'normal'
+            self.export_button['state'] = 'normal'
         else:
-            print('user cancled open file')
+            print('user canceled open file')
 
     def export_image(self):
         self._save_file_path = filedialog.asksaveasfilename(
@@ -125,8 +124,9 @@ class app(tk.Frame):
         if self._save_file_path:
             self.image.export(self.export_size.get(),
                               self._export_color).save(self._save_file_path)
+            print('export image:', self._save_file_path)
         else:
-            print('user cancled save file')
+            print('user canceled save file')
         pass
 
     def radio_button_clicked(self, event):
@@ -157,11 +157,19 @@ class app(tk.Frame):
             pass
 
         def export(self, size, bg_color):
-            self.box = (13, 26, 69, 86)
+            self.box = self._raw_image.getbbox()
             self.corped_image = self._raw_image.crop(self.box)
+            self._x_size = self.box[2] - self.box[0]
+            self._y_size = self.box[3] - self.box[1]
+            self._x_offset = int((64 - self._x_size)/2)
+            self._y_offset = int((64 - self._y_size)/2)
             self.background = Image.new('RGBA', (64, 64), bg_color)
-            self.background.paste(
-                self.corped_image, (4, 2, 60, 62), self.corped_image)
+            self.background.paste(self.corped_image,
+                                  (self._x_offset,
+                                   self._y_offset,
+                                   self._x_offset + self._x_size,
+                                   self._y_offset + self._y_size),
+                                  self.corped_image)
             self.resized_image = self.background.resize(
                 (size, size), resample=0)
             return self.resized_image
@@ -170,7 +178,7 @@ class app(tk.Frame):
 if __name__ == '__main__':
     root = tk.Tk()
     root.title('IconPony')
-    root.resizable(False,False)
+    root.resizable(False, False)
     icon_pony = app(root)
     root.mainloop()
     pass
